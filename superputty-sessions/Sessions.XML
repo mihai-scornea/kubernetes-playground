@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSessionData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SessionData SessionId="k8s-master" SessionName="k8s-master" ImageKey="computer" Host="127.0.0.1" Port="2222" Proto="SSH" PuttySession="Default Settings" Username="vagrant" ExtraArgs="" SPSLFileName="" CollectionID="" CollectionLocation="" RemotePath="" LocalPath="" />
+  <SessionData SessionId="k8s-worker-1" SessionName="k8s-worker-1" ImageKey="computer" Host="127.0.0.1" Port="2223" Proto="SSH" PuttySession="Default Settings" Username="vagrant" ExtraArgs="" SPSLFileName="" CollectionID="" CollectionLocation="" RemotePath="" LocalPath="" />
+  <SessionData SessionId="k8s-worker-2" SessionName="k8s-worker-2" ImageKey="computer" Host="127.0.0.1" Port="2224" Proto="SSH" PuttySession="Default Settings" Username="vagrant" ExtraArgs="" SPSLFileName="" CollectionID="" CollectionLocation="" RemotePath="" LocalPath="" />
+</ArrayOfSessionData>
