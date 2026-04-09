@@ -27,6 +27,8 @@ By the end, you will understand what everything does intuitively, not just "inst
   - [SSH Keys](#ssh-keys)
 - [Quick Start](#quick-start)
   - [Bringing the VMs to Life](#bringing-the-vms-to-life)
+  - [Pausing the VMs](#pausing-the-vms)
+  - [Deleting the VMs](#deleting-the-vms)
   - [Connecting to the Machines](#connecting-to-the-machines)
     - [Importing the Private Key](#importing-the-private-key)
     - [Importing or Creating the Connections in SuperPuTTY](#importing-or-creating-the-connections-in-superputty)
@@ -88,6 +90,8 @@ Download and install from:
 ```
 https://developer.hashicorp.com/vagrant/install
 ```
+
+Also, feel free to inspect the Vagrantfile and see what it does. I explained everything in its comments.
 
 ## PuTTY
 
@@ -161,7 +165,9 @@ That's how I put that warning sign without looking it up in a browser 🪽
 
 ## Bringing the VMs to life
 
-Open a PowerShell in this folder and type:
+First, check your system specs. If you have 16 GB of RAM or less, consider modifying the Vagrantfile and setting `vm_memory = 3072`. Make sure to save it after modifying.
+
+Then, open a PowerShell in this folder and type:
 
 ```bash
 vagrant up
@@ -174,6 +180,57 @@ If they hang on startup, either disable Hyper-V or look at the virtualbox previe
 ![VirtualBox Preview](docs-images/virtualbox-preview.png)
 
 Having the preview on the screen causes the VMs to "wake up" when they are prompted for their status for this preview.
+
+---
+
+## Pausing the VMs
+
+If, at any point, you would like to pause your virtual machines, there is an easy way to do that.
+
+Open a PowerShell in this folder and type:
+
+```bash
+vagrant halt
+```
+
+This will gracefully stop them. Think of it like shutting down a computer, but the computer remains there.
+
+To turn them back on, in the same PowerShell, type:
+```bash
+vagrant up
+```
+
+It is the same command used for creating them in the first place, however, Vagrant detects that the machines already exist and just starts them up. It won't re-run the provisioning parts in this case so we don't have to worry about duplicate entries in the `/etc/hosts` file or anything like that.
+
+---
+
+## Deleting the VMs
+
+If you'd like to completely delete your virtual machines, maybe to start over on a fresh setup, do the following.
+
+Open a PowerShell in this folder and type:
+
+```bash
+vagrant destroy
+```
+
+This will stop them and also delete them. This means that they are completely gone.
+
+It will ask you for confirmation for each of them, you have to input `y` to confirm.
+
+If you want it to delete everything without asking:
+
+```bash
+vagrant destroy -f
+```
+
+This will delete them all without asking for confirmation.
+
+To spin up fresh VMs after deleting them:
+
+```bash
+vagrant up
+```
 
 ---
 

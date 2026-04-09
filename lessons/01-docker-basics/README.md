@@ -1,5 +1,23 @@
 [← Back to Lessons](../../README.md#lessons)
 
+# Table of contents
+- [Installing Docker](#installing-docker)
+
+- [Running a nginx image](#running-a-nginx-image)
+  - [Simple image run](#simple-image-run)
+  - [Image run with forwarded ports](#image-run-with-forwarded-ports)
+  - [Image run with forwarded ports and attached volume](#image-run-with-forwarded-ports-and-attached-volume)
+
+- [Hosting a Nexus repository as a container](#hosting-a-nexus-repository-as-a-container)
+  - [Running a nexus container](#running-a-nexus-container)
+  - [Creating an SSH Tunnel](#creating-an-ssh-tunnel)
+  - [Logging in to Nexus](#logging-in-to-nexus)
+  - [Creating our own user](#creating-our-own-user)
+  - [Creating an image repository](#creating-an-image-repository)
+  - [Storing an image to our own image registry](#storing-an-image-to-our-own-image-registry)
+
+- [Building an image using a Dockerfile](#building-an-image-using-a-dockerfile)
+
 # Installing Docker
 
 Docker is a tool that runs applications in isolated environments called containers.
@@ -275,7 +293,7 @@ First, delete your container:
 docker rm -f my-nginx
 ```
 
-## Image run with forwarded ports and volume
+## Image run with forwarded ports and attached volume
 
 On **k8s-master**, run:
 
@@ -450,7 +468,7 @@ Now comes a very interesting problem. We would ideally be able to access the Nex
 
 In order to access it, we will have to do a trick explained in the next section.
 
-## Creating a SSH Tunnel
+## Creating an SSH Tunnel
 
 There is a way to use SSH to make what is accessible on a remote machine at a certain port be also accessible on our local machine at a port (could be the same or another).
 
@@ -766,4 +784,4 @@ That is it for Docker. Next up, we will do a deep dive into how Docker and even 
 
 ---
 
-# [02 - Networking Deep Dive](lessons/02-networking-deep-dive/README.md)
+# [02 - Networking Deep Dive](../02-networking-deep-dive/README.md)
