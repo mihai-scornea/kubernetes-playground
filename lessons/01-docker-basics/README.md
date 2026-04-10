@@ -1,5 +1,7 @@
 [← Back to Lessons](../../README.md#lessons)
 
+# Docker and containers
+
 # Table of contents
 - [Installing Docker](#installing-docker)
 
@@ -17,6 +19,8 @@
   - [Storing an image to our own image registry](#storing-an-image-to-our-own-image-registry)
 
 - [Building an image using a Dockerfile](#building-an-image-using-a-dockerfile)
+
+---
 
 # Installing Docker
 

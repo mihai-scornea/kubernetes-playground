@@ -36,6 +36,8 @@ By the end, you will understand what everything does intuitively, not just "inst
     - [Extra Info About SuperPuTTY](#extra-info-about-superputty)
 - [Lessons](#lessons)
 
+---
+
 # Prerequisites
 
 ## Visual Studio Code
@@ -202,6 +204,8 @@ vagrant up
 
 It is the same command used for creating them in the first place, however, Vagrant detects that the machines already exist and just starts them up. It won't re-run the provisioning parts in this case so we don't have to worry about duplicate entries in the `/etc/hosts` file or anything like that.
 
+Once again, if your machines hang on startup and the Vagrant command times out, open the VirtualBox window and keep the preview window on your screen as described above, it should wake them up.
+
 ---
 
 ## Deleting the VMs
@@ -301,8 +305,6 @@ All changes need to be saved in the same way described above.
 
 There are more tricks like setting up SSH tunnels, we will explore those later :)
 
-# Lessons
-
 ---
 
 # Lessons
@@ -312,7 +314,7 @@ Once your environment is ready, start going through the lessons in order:
 - [01 - Docker Basics](lessons/01-docker-basics/README.md)  
   Learn how Docker works by building images, running containers, exposing ports, and even creating your own image repository and pushing images to it.
 
-- [02 - Networking Deep Dive](lessons/02-networking-deep-dive/README.md)  
+- [02 - Networking Deep Dive: How Containers Talk Across Machines](lessons/02-networking-deep-dive/README.md)  
   Understand how container networking actually works under the hood using network namespaces, veth pairs, bridges and tunnels.
 
 - [03 - Kubernetes Installation](lessons/03-kubernetes-installation/README.md)  
@@ -339,8 +341,8 @@ Once your environment is ready, start going through the lessons in order:
 - [10 - Helm and Ingress](lessons/10-helm-and-ingress/README.md)  
   Package applications with Helm and expose them externally using Ingress.
 
-- [11 - Affinities](lessons/11-affinities/README.md)  
-  Control where Pods are scheduled using node affinity and anti-affinity rules.
+- [11 - Affinities and taints](lessons/11-affinities-and-taints/README.md)  
+  Control where Pods are scheduled using node affinity and anti-affinity rules along with taints and tolerations.
 
 - [12 - User Access](lessons/12-user-access/README.md)  
   Manage access to your cluster using users, roles, and permissions (RBAC).
