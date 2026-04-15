@@ -106,7 +106,7 @@ https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 
 ## WinSCP
 
-WinSCP is a file manager that allows you to copy files to and from a remote machine. Useful so you don’t have to deal with SCP commands directly or PuTTY's `pscp` command.
+WinSCP is a file manager that allows you to copy files to and from a remote machine. Useful so you don't have to deal with SCP commands directly or PuTTY's `pscp` command.
 
 Download and install WinSCP from:
 ```

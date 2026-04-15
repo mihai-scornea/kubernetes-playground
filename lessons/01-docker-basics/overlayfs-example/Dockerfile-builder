@@ -1,0 +1,16 @@
+# Builder stage
+FROM alpine:3.20 AS builder
+
+WORKDIR /app
+
+RUN dd if=/dev/urandom of=bigfile.bin bs=1M count=50
+RUN echo "hello" > small.txt
+
+# Final stage (same base, but clean)
+FROM alpine:3.20
+
+WORKDIR /app
+
+COPY --from=builder /app/small.txt .
+
+CMD ["sh"]

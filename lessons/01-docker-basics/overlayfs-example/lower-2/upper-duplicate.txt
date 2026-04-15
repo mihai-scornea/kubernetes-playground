@@ -1,0 +1,4 @@
+---------------------------------
+upper-duplicate.txt
+This came from the lower-2 layer
+---------------------------------

@@ -1,0 +1,14 @@
+FROM alpine:3.20
+
+WORKDIR /app
+
+# Create big file
+RUN dd if=/dev/urandom of=bigfile.bin bs=1M count=50
+
+# Delete it
+RUN rm bigfile.bin
+
+# Add something small
+RUN echo "hello" > small.txt
+
+CMD ["sh"]
