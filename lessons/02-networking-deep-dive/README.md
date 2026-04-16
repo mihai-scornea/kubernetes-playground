@@ -54,7 +54,7 @@ We will use our `k8s-worker-1` and `k8s-worker-2` machines for these purposes.
 
 Our goal is to get such a setup:
 
-![Networking Setup](docs-images/networking-1.png)
+![Networking Setup](docs-images/networking-final.png)
 
 In this setup, we simulate containers by making network namespaces on our `k8s-worker-1` and `k8s-worker-2` nodes.
 
@@ -128,7 +128,7 @@ However, machines in a Kubernetes cluster do not need to be on the same local ne
 
 ### To make this work, Kubernetes often uses a different approach called an **overlay network**.
 
-![Networking Setup](docs-images/networking-2.png)
+![Networking Setup](docs-images/networking-overlay-final.png)
 
 For our purposes, we will pretend that our two machines are not on the same network. The fact that they actually are does not change how the setup works.
 

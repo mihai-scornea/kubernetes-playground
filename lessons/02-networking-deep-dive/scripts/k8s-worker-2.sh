@@ -21,7 +21,7 @@ NS2="NS2"
 # The IP of the node we are on (should be the IP of k8s-worker-2)
 NODE_IP="192.168.50.12"
 
-# The subnet and IP of the bridge we will create.
+# The subnet of the bridge and IP of the host when connected to the bridge.
 # The bridge itself acts as a virtual switch (L2),
 # while the host uses it as a gateway (L3, router behavior) for routing traffic.
 BRIDGE_SUBNET="10.2.0.0/24"
@@ -38,7 +38,7 @@ IP2="10.2.0.3"
 # The IP address of the other node (k8s-worker-1) that we will use to test connectivity.
 TO_NODE_IP="192.168.50.11"
 
-# The subnet and IP of the bridge we will create on the other node.
+# The subnet of the bridge and IP of the host when connected to the bridge on the other node.
 TO_BRIDGE_SUBNET="10.1.0.0/24"
 TO_BRIDGE_IP="10.1.0.1"
 
@@ -112,7 +112,7 @@ sudo ip netns exec $NS1 ip addr add $IP1/24 dev veth10
 sudo ip netns exec $NS2 ip addr add $IP2/24 dev veth20
 
 # We will also assign an IP address to the bridge on the host machine.
-# This is like configuring the network settings on the virtual switch.
+# This is the IP of our host computer when connecting to this bridge
 # This IP is not needed for communication between namespaces on the same host (L2),
 # but it acts as the default gateway for traffic leaving the subnet (L3 routing).
 
