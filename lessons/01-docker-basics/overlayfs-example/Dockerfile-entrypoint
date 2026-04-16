@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+# This is the main command
+ENTRYPOINT ["echo"]
+
+# These are default arguments
+CMD ["Hello from CMD"]

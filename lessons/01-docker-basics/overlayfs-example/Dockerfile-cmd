@@ -1,0 +1,4 @@
+FROM alpine:latest
+
+# This is the main command
+CMD ["echo", "Hello from CMD"]

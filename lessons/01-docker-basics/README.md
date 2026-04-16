@@ -26,6 +26,8 @@
 
 - [CGroups](#cgroups)
 
+- [Saving and loading images](#saving-and-loading-images)
+
 ---
 
 # Installing Docker
@@ -1187,7 +1189,32 @@ IMAGE          CREATED         CREATED BY                                      S
 
 You can actually see the 50MB layer right there.
 
-Deleting files in a Dockerfile does not reduce image size. Avoiding adding them in the first place does
+Deleting files in a Dockerfile does not reduce image size. Avoiding adding them in the first place does.
+
+Also, there are two more Dockerfiles on which you can explore what CMD and ENTRYPOINT do.
+
+```bash
+docker build -f Dockerfile-cmd -t cmd-example:1.0 .
+docker build -f Dockerfile-entrypoint -t entrypoint-example:1.0 .
+```
+
+Then:
+
+```bash
+docker run --rm cmd-example:1.0
+docker run --rm cmd-example:1.0 echo "Overridden CMD"
+docker run --rm cmd-example:1.0 pwd
+```
+
+And:
+
+```bash
+docker run --rm entrypoint-example:1.0
+docker run --rm entrypoint-example:1.0 "New argument"
+docker run --rm entrypoint-example:1.0 pwd
+docker run --rm --entrypoint pwd entrypoint-example:1.0
+```
+
 
 ---
 
@@ -1220,6 +1247,24 @@ Now it will only be allowed to use 20% of a single CPU core.
 Docker uses CGroups under the hood to enforce resource limits on containers.
 
 There are similar ways to restrict RAM usage, for example by setting memory limits when running containers.
+
+---
+
+# Saving and loading images
+
+```bash
+cd ~
+```
+
+To save:
+```bash
+docker save -o entrypoint-example.tar entrypoint-example:1.0
+```
+
+To load:
+```bash
+docker load -i entrypoint-example.tar
+```
 
 ---
 
