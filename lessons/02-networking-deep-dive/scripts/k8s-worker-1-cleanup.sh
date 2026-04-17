@@ -71,7 +71,7 @@ sudo ip link del veth21 2>/dev/null || true
 
 # Reset sysctl values (optional but clean)
 echo "Resetting sysctl settings..."
-sudo sysctl -w net.ipv4.ip_forward=0
+# sudo sysctl -w net.ipv4.ip_forward=0
 sudo sysctl -w net.ipv4.conf.all.rp_filter=1
 sudo sysctl -w net.ipv4.conf.default.rp_filter=1
 
