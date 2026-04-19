@@ -534,6 +534,29 @@ Instead:
 
 This is called port forwarding and is widely used in real environments to securely access internal services.
 
+Here's a few commands to play with, explained in the course:
+
+### SSH tunnel from k8s-worker-2 to k8s-master's nexus:
+```bash
+ssh -N -L localhost:8086:localhost:8081 -i ~/.ssh/id_rsa vagrant@k8s-master -p 22
+```
+
+### SSH tunnel from k8s-worker-1 to k8s-master's nexus, through k8s-worker-1:
+```bash
+ssh -N -L localhost:8086:k8s-master:8081 -i ~/.ssh/id_rsa vagrant@k8s-worker-1 -p 22
+```
+
+### SSH tunnel from k8s-master to k8s-worker-2, exposing k8s-master's nexus on k8s-worker-2
+```bash
+ssh -N -R 0.0.0.0:8086:localhost:8081 -i ~/.ssh/id_rsa vagrant@k8s-worker-2 -p 22
+```
+
+### SSH tunnel from k8s-worker-1 to k8s-worker-2, exposing k8s-master's nexus on k8s-worker-2
+```bash
+ssh -N -R 0.0.0.0:8086:k8s-master:8081 -i ~/.ssh/id_rsa vagrant@k8s-worker-2 -p 22
+```
+
+
 ## Logging in to Nexus
 
 You can log in using:

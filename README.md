@@ -344,8 +344,11 @@ Once your environment is ready, start going through the lessons in order:
 - [11 - Affinities and taints](lessons/11-affinities-and-taints/README.md)  
   Control where Pods are scheduled using node affinity and anti-affinity rules along with taints and tolerations.
 
-- [12 - User Access](lessons/12-user-access/README.md)  
+- [12 - StatefulSets and Persistent Volumes](lessons/12-statefulsets-and-persistent-volumes/README.md)  
+  Learn how to run stateful workloads and persist their data using StatefulSets and Persistent Volumes.
+
+- [13 - User Access](lessons/13-user-access/README.md)  
   Manage access to your cluster using users, roles, and permissions (RBAC).
 
-- [13 - Kubernetes upgrade](lessons/13-kubernetes-upgrade/README.md)  
+- [14 - Kubernetes upgrade](lessons/14-kubernetes-upgrade/README.md)  
   Upgrade your Kubernetes cluster.
