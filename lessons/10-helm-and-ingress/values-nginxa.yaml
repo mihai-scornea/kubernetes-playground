@@ -1,0 +1,21 @@
+nameOverride: simple-nginx
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.25"
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /nginxa
+  pathPattern: /nginxa(/|$)(.*)
+
+content:
+  pageTitle: Nginx A
+  heading: Hello from nginx A
+  message: This page was rendered from the Helm values file for the nginxa release.

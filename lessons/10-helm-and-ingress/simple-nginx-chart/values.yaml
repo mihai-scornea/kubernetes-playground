@@ -1,0 +1,21 @@
+nameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.25"
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+  pathPattern: /
+
+content:
+  pageTitle: Simple Nginx
+  heading: Hello from Helm
+  message: This page was built from a ConfigMap template.

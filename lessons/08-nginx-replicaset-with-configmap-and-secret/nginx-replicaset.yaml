@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-rs-demo
+  template:
+    metadata:
+      labels:
+        app: nginx-rs-demo
+    spec:
+      volumes:
+        - name: nginx-index
+          configMap:
+            name: nginx-index-config
+            items:
+              - key: index.html
+                path: index.html
+        - name: nginx-secret-volume
+          secret:
+            secretName: nginx-demo-secret
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_SECRET_MESSAGE
+              valueFrom:
+                secretKeyRef:
+                  name: nginx-demo-secret
+                  key: secret-message
+          volumeMounts:
+            - name: nginx-index
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+            - name: nginx-secret-volume
+              mountPath: /etc/demo-secret
+              readOnly: true

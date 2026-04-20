@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-2-nginx-service
+spec:
+  type: ClusterIP
+  selector:
+    app: worker-2-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

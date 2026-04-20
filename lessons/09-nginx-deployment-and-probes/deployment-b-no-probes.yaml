@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rolling-demo
+  labels:
+    app: nginx-rolling-demo
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nginx-rolling-demo
+  template:
+    metadata:
+      labels:
+        app: nginx-rolling-demo
+        version: b
+        probe-mode: no-probes
+    spec:
+      volumes:
+        - name: nginx-content
+          configMap:
+            name: nginx-content-b
+            items:
+              - key: index.html
+                path: index.html
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          command:
+            - /bin/sh
+            - -c
+            - sleep 1 && exec nginx -g 'daemon off;'
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-content
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html

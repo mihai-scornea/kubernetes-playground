@@ -497,6 +497,18 @@ k8s-worker-2   Ready    <none>          26m   v1.35.0
 
 Congratulations! You just installed your first kubernetes cluster!
 
+Let's quickly make our command line have autocomplete for kubectl and also alias k to kubectl:
+
+https://kubernetes.io/docs/reference/kubectl/quick-reference/
+
+```bash
+source <(kubectl completion bash) # set up autocomplete in bash into the current shell, bash-completion package should be installed first.
+echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
+alias k=kubectl # alias k to kubectl
+complete -o default -F __start_kubectl k # give k autocomplete too
+echo -e '\nalias k=kubectl\ncomplete -o default -F __start_kubectl k' >> ~/.bashrc # make it persist across reboots
+```
+
 We will see how we can use it in the next lessons.
 
 ---

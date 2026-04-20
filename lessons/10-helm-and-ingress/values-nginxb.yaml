@@ -1,0 +1,21 @@
+nameOverride: simple-nginx
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "1.25"
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /nginxb
+  pathPattern: /nginxb(/|$)(.*)
+
+content:
+  pageTitle: Nginx B
+  heading: Hello from nginx B
+  message: This page was rendered from the Helm values file for the nginxb release.

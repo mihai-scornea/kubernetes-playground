@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preferred-spread
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: preferred-spread
+  template:
+    metadata:
+      labels:
+        app: preferred-spread
+    spec:
+      containers:
+        - name: preferred-spread
+          image: busybox:1.36.1
+          command:
+            - sh
+            - -c
+            - trap 'exit 0' TERM; while true; do sleep 1; done
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - preferred-spread
+                topologyKey: kubernetes.io/hostname

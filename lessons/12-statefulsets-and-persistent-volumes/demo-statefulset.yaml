@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nfs-stateful-demo
+spec:
+  serviceName: nfs-stateful-demo
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nfs-stateful-demo
+  template:
+    metadata:
+      labels:
+        app: nfs-stateful-demo
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - nfs-stateful-demo
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: demo
+          image: busybox:1.36.1
+          command:
+            - sh
+            - -c
+            - trap 'exit 0' TERM; while true; do sleep 1; done
+          volumeMounts:
+            - name: data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: nfs-csi
+        resources:
+          requests:
+            storage: 10Mi

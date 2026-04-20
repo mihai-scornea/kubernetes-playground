@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-content-b
+data:
+  index.html: |
+    <html>
+      <head>
+        <title>Version B</title>
+      </head>
+      <body>
+        <h1>Version B</h1>
+        <p>This response came from configmap B.</p>
+      </body>
+    </html>
