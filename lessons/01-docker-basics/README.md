@@ -868,7 +868,7 @@ sudo mount -t overlay overlay \
 
 This command tells the system:
 
-- use the `lower-2` and `lower-1` folders as read-only layers, `layer-2` is above `layer-1`
+- use the `lower-2` and `lower-1` folders as read-only layers, `lower-2` is above `lower-1`
 - use the `upper` folder as the writable layer
 - use the `work` folder internally
 - expose everything through the `merged` folder
