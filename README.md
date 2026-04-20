@@ -320,8 +320,8 @@ Once your environment is ready, start going through the lessons in order:
 - [03 - Kubernetes Installation](lessons/03-kubernetes-installation/README.md)  
   Install a real Kubernetes cluster using kubeadm and understand what each component does.
 
-- [04 - First Pod](lessons/04-first-pod/README.md)  
-  Create your first Pod and understand the most basic Kubernetes building block.
+- [04 - First Pods](lessons/04-first-pods/README.md)  
+  Create your first Pods and understand the most basic Kubernetes building block.
 
 - [05 - Debugging and Testing Pods](lessons/05-debugging-and-testing-pods/README.md)  
   Learn how to inspect, debug, and interact with Pods using kubectl and common troubleshooting techniques.
@@ -352,3 +352,6 @@ Once your environment is ready, start going through the lessons in order:
 
 - [14 - Kubernetes upgrade](lessons/14-kubernetes-upgrade/README.md)  
   Upgrade your Kubernetes cluster.
+
+- [15 - etcd Backups and Restores](lessons/15-etcd-backups-and-restores/README.md)  
+  Back up the Kubernetes datastore and practice restoring it in a kubeadm-based lab.

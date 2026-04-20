@@ -265,6 +265,12 @@ sudo apt-get install -y \
   kubectl=1.35.0-1.1
 ```
 
+Also, it is a good idea to hold them so that they are not automatically updated if someone wants to update everything:
+
+```bash
+sudo apt-mark hold cri-o kubelet kubeadm kubectl
+```
+
 Now we have container runtimes, the kubelets which will tell the container runtimes what to run for us, the kubectl which is our way to talk to kubernetes and kubeadm which will install the other components of Kubernetes for us.
 
 ---

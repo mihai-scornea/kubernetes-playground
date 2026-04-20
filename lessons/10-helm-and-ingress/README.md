@@ -327,7 +327,9 @@ helm uninstall nginxa
 helm uninstall nginxb
 ```
 
-To remove the ingress controller:
+You can leave the ingress controller here if you want.
+
+Otherwise, to remove the ingress controller:
 
 ```bash
 helm uninstall ingress-nginx -n ingress-nginx

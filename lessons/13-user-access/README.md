@@ -16,6 +16,7 @@
 - [Building a kubeconfig for the new user](#building-a-kubeconfig-for-the-new-user)
 - [Testing access in the default namespace](#testing-access-in-the-default-namespace)
 - [Testing access in the new namespace](#testing-access-in-the-new-namespace)
+- [Refreshing kubeadm-managed control plane certificates](#refreshing-kubeadm-managed-control-plane-certificates)
 - [Cleaning up](#cleaning-up)
 
 ---
@@ -450,6 +451,102 @@ So we have successfully demonstrated:
 - authentication by client certificate
 - authorization by Role and RoleBinding
 - namespace-limited access
+
+---
+
+## Refreshing kubeadm-managed control plane certificates
+
+Since this lesson is about certificates, it is also a good place to mention how kubeadm can refresh the control plane certificates it manages.
+
+This is a different use case from the `student-user` certificate we created earlier.
+
+Here we are talking about kubeadm-managed cluster certificates such as:
+
+- `apiserver`
+- `apiserver-kubelet-client`
+- `apiserver-etcd-client`
+- `front-proxy-client`
+- `admin.conf`
+- `controller-manager.conf`
+- `scheduler.conf`
+
+Official kubeadm certificate reference:
+
+- https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-certs/
+
+### 1. Check certificate expiration
+
+On `k8s-master`, run:
+
+```bash
+sudo kubeadm certs check-expiration
+```
+
+This shows which kubeadm-managed certificates exist and when they expire.
+
+### 2. Renew all kubeadm-managed certificates
+
+To renew everything kubeadm manages:
+
+```bash
+sudo kubeadm certs renew all
+```
+
+You can also renew certificates individually.
+
+For example:
+
+```bash
+sudo kubeadm certs renew apiserver
+sudo kubeadm certs renew apiserver-etcd-client
+sudo kubeadm certs renew admin.conf
+```
+
+These renewals run unconditionally.
+
+That means kubeadm does not wait until a certificate is almost expired. It simply refreshes it when you ask.
+
+### 3. Restart the control plane static pods
+
+After renewing the certificates, the control plane components need to pick up the new files.
+
+Because kubeadm runs them as static pods, an easy way to restart them is to temporarily move the manifest files out of `/etc/kubernetes/manifests` and then move them back.
+
+For example:
+
+```bash
+sudo mkdir -p /root/k8s-manifests-temp
+sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /root/k8s-manifests-temp/
+sleep 20
+sudo mv /root/k8s-manifests-temp/kube-apiserver.yaml /etc/kubernetes/manifests/
+```
+
+You can do the same for:
+
+- `kube-controller-manager.yaml`
+- `kube-scheduler.yaml`
+- `etcd.yaml`
+
+if needed.
+
+### 4. Refresh local admin kubeconfig if needed
+
+If you renewed `admin.conf`, update your local copy too:
+
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+### 5. Verify the cluster still works
+
+```bash
+kubectl get nodes
+kubectl get pods -A
+```
+
+This is a useful operational task to know even though our main user-access example in this lesson focused on namespace-limited RBAC for a human user certificate.
 
 ---
 
