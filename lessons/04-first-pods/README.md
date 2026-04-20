@@ -128,6 +128,15 @@ Create the secret first:
 kubectl apply -f registry-secret.yaml
 ```
 
+This file was created using the following command:
+```bash
+kubectl create secret docker-registry private-registry-credentials \
+  --docker-server=k8s-master:8082 \
+  --docker-username=kube-user \
+  --docker-password=123123123 \
+  --dry-run=client -o yaml
+```
+
 Create the hello world pod:
 
 ```bash
