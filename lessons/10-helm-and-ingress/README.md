@@ -193,7 +193,7 @@ That is one of Helm's biggest advantages:
 Install the first release:
 
 ```bash
-helm upgrade --install nginxa ./simple-nginx-chart -f values-nginxa.yaml
+helm upgrade --install nginxa ./simple-nginx-chart -f ./simple-nginx-chart/values.yaml -f values-nginxa.yaml
 ```
 
 Check what it created:
@@ -221,7 +221,7 @@ The chart also rewrites that path back to `/` before sending the request to ngin
 Install the second release:
 
 ```bash
-helm upgrade --install nginxb ./simple-nginx-chart -f values-nginxb.yaml
+helm upgrade --install nginxb ./simple-nginx-chart -f ./simple-nginx-chart/values.yaml -f values-nginxb.yaml
 ```
 
 Check again:

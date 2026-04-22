@@ -8,8 +8,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+      maxSurge: 4
+      maxUnavailable: 4
   minReadySeconds: 1
   replicas: 10
   selector:
@@ -36,7 +36,7 @@ spec:
           command:
             - /bin/sh
             - -c
-            - sleep 1 && exec nginx -g 'daemon off;'
+            - sleep 5 && exec nginx -g 'daemon off;'
           ports:
             - containerPort: 80
           lifecycle:

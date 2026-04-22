@@ -36,7 +36,7 @@ spec:
           command:
             - /bin/sh
             - -c
-            - sleep 1 && exec nginx -g 'daemon off;'
+            - sleep 5 && exec nginx -g 'daemon off;'
           ports:
             - containerPort: 80
           lifecycle:

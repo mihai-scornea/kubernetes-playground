@@ -36,6 +36,7 @@ print_report() {
   fi
 
   echo
+  echo "-----------------------"
   echo "After ${TOTAL_QUERIES} queries:"
   echo "Window size: ${window_count}"
   echo "A: ${a_pct}%"

@@ -8,4 +8,6 @@ spec:
     app: nfs-stateful-demo
   ports:
     - port: 80
+      targetPort: 80
+      protocol: TCP
       name: dummy

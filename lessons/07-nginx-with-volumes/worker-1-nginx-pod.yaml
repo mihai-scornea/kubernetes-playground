@@ -19,4 +19,4 @@ spec:
       volumeMounts:
         - name: html-volume
           mountPath: /usr/share/nginx/html
-          readOnly: true
+          readOnly: false

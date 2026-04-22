@@ -11,6 +11,8 @@
 - [Creating the Secret](#creating-the-secret)
 - [Creating the ReplicaSet](#creating-the-replicaset)
 - [Creating the Service](#creating-the-service)
+- [Creating the DaemonSet](#creating-the-daemonset)
+- [Creating the DaemonSet Service](#creating-the-daemonset-service)
 - [Testing the nginx content](#testing-the-nginx-content)
 - [Scaling the ReplicaSet up and down](#scaling-the-replicaset-up-and-down)
 - [Updating the ConfigMap and restarting the replicas](#updating-the-configmap-and-restarting-the-replicas)
@@ -26,6 +28,8 @@ In this lesson, we will create an nginx ReplicaSet and configure it with:
 
 - a `ConfigMap`
 - a `Secret`
+
+We will also create a separate nginx `DaemonSet` with its own Service so we can compare a workload that runs one pod per node.
 
 The `ConfigMap` will provide the `index.html` file that all nginx replicas will serve.
 
@@ -47,6 +51,8 @@ We will use these files:
 - `nginx-secret.yaml`
 - `nginx-replicaset.yaml`
 - `nginx-service.yaml`
+- `nginx-daemonset.yaml`
+- `nginx-daemonset-service.yaml`
 
 ---
 
@@ -185,6 +191,65 @@ Using a Service is much more practical than targeting pod IPs directly, because 
 
 ---
 
+## Creating the DaemonSet
+
+Now create the DaemonSet:
+
+```bash
+kubectl apply -f nginx-daemonset.yaml
+```
+
+Inspect it with:
+
+```bash
+kubectl get daemonset nginx-daemon-demo
+kubectl get pods -l app=nginx-daemon-demo -o wide
+```
+
+A DaemonSet works differently from a ReplicaSet.
+
+Instead of keeping a chosen number of replicas, it makes sure one matching pod runs on each eligible node.
+
+That means if your cluster has:
+
+- `2` nodes, you should see `2` DaemonSet pods
+- `3` nodes, you should see `3` DaemonSet pods
+
+This is useful for workloads that should exist everywhere, such as:
+
+- log collectors
+- monitoring agents
+- node-level networking components
+
+In our case, we are just using a default nginx pod so the behavior is easy to observe.
+
+---
+
+## Creating the DaemonSet Service
+
+Now create a Service for the DaemonSet:
+
+```bash
+kubectl apply -f nginx-daemonset-service.yaml
+```
+
+Inspect it with:
+
+```bash
+kubectl get svc nginx-daemon-service
+kubectl describe svc nginx-daemon-service
+```
+
+This Service selects all DaemonSet pods with the label:
+
+```yaml
+app: nginx-daemon-demo
+```
+
+That gives us one stable DNS name that can forward traffic to the nginx pods created by the DaemonSet.
+
+---
+
 ## Testing the nginx content
 
 Because all replicas mount the same `index.html` from the ConfigMap, they should all serve the same content.
@@ -225,6 +290,16 @@ exit
 ```
 
 Of course, replace `<pod-ip>` with one of the pod IPs from your cluster.
+
+You can also test the DaemonSet Service:
+
+```bash
+kubectl exec -it tester-pod -- bash
+curl http://nginx-daemon-service
+exit
+```
+
+This should return the default nginx page from one of the DaemonSet pods.
 
 ---
 
@@ -445,6 +520,8 @@ We are not covering roles yet, but it is good to know that this distinction matt
 To remove the resources from this lesson:
 
 ```bash
+kubectl delete -f nginx-daemonset-service.yaml
+kubectl delete -f nginx-daemonset.yaml
 kubectl delete -f nginx-service.yaml
 kubectl delete -f nginx-replicaset.yaml
 kubectl delete -f nginx-secret.yaml

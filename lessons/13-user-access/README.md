@@ -16,6 +16,8 @@
 - [Building a kubeconfig for the new user](#building-a-kubeconfig-for-the-new-user)
 - [Testing access in the default namespace](#testing-access-in-the-default-namespace)
 - [Testing access in the new namespace](#testing-access-in-the-new-namespace)
+- [Creating a ServiceAccount for a pod in student-space](#creating-a-serviceaccount-for-a-pod-in-student-space)
+- [Testing pod access with the ServiceAccount](#testing-pod-access-with-the-serviceaccount)
 - [Refreshing kubeadm-managed control plane certificates](#refreshing-kubeadm-managed-control-plane-certificates)
 - [Cleaning up](#cleaning-up)
 
@@ -47,6 +49,8 @@ Finally, we will test that:
 - the new user can not deploy into `default`
 - the new user can deploy into the namespace we explicitly allowed
 
+We will also create a `ServiceAccount` that a pod inside `student-space` can use to list pods in that same namespace through the Kubernetes API.
+
 ---
 
 ## What we will create
@@ -65,6 +69,10 @@ We will also use these files:
 - `kubernetes-user-csr.yaml`
 - `default-test-pod.yaml`
 - `student-space-test-pod.yaml`
+- `student-pod-reader-serviceaccount.yaml`
+- `student-pod-reader-role.yaml`
+- `student-pod-reader-rolebinding.yaml`
+- `student-pod-reader-pod.yaml`
 
 ---
 
@@ -454,6 +462,75 @@ So we have successfully demonstrated:
 
 ---
 
+## Creating a ServiceAccount for a pod in student-space
+
+Kubernetes users are not the only identities we can authorize.
+
+Pods can also authenticate to the API server by using a `ServiceAccount`.
+
+Create these resources:
+
+```bash
+kubectl apply -f student-pod-reader-serviceaccount.yaml
+kubectl apply -f student-pod-reader-role.yaml
+kubectl apply -f student-pod-reader-rolebinding.yaml
+kubectl apply -f student-pod-reader-pod.yaml
+```
+
+Check them:
+
+```bash
+kubectl get serviceaccount -n student-space
+kubectl get role -n student-space
+kubectl get rolebinding -n student-space
+kubectl get pod -n student-space student-pod-reader-pod
+```
+
+This setup does the following:
+
+- creates a `ServiceAccount` named `student-pod-reader`
+- grants it `get`, `list`, and `watch` access to pods in `student-space`
+- starts a pod that uses that `ServiceAccount`
+
+This is useful when an application running inside the cluster needs to talk to the Kubernetes API.
+
+---
+
+## Testing pod access with the ServiceAccount
+
+Now open a shell inside the pod:
+
+```bash
+kubectl exec -it -n student-space student-pod-reader-pod -- bash
+```
+
+Inside the pod, use the mounted token and cluster CA to call the Kubernetes API:
+
+```bash
+TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+
+curl --cacert $CACERT \
+  -H "Authorization: Bearer $TOKEN" \
+  https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/pods
+```
+
+You should receive a JSON response listing the pods in `student-space`.
+
+This demonstrates that:
+
+- the pod is authenticated as its `ServiceAccount`
+- RBAC allows it to view pods only in its own namespace
+
+When you are done:
+
+```bash
+exit
+```
+
+---
+
 ## Refreshing kubeadm-managed control plane certificates
 
 Since this lesson is about certificates, it is also a good place to mention how kubeadm can refresh the control plane certificates it manages.
@@ -516,18 +593,11 @@ For example:
 
 ```bash
 sudo mkdir -p /root/k8s-manifests-temp
-sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /root/k8s-manifests-temp/
+sudo sh -c 'mv /etc/kubernetes/manifests/* /root/k8s-manifests-temp/'
 sleep 20
-sudo mv /root/k8s-manifests-temp/kube-apiserver.yaml /etc/kubernetes/manifests/
+sudo sh -c 'mv /root/k8s-manifests-temp/* /etc/kubernetes/manifests/'
 ```
 
-You can do the same for:
-
-- `kube-controller-manager.yaml`
-- `kube-scheduler.yaml`
-- `etcd.yaml`
-
-if needed.
 
 ### 4. Refresh local admin kubeconfig if needed
 
@@ -555,6 +625,10 @@ This is a useful operational task to know even though our main user-access examp
 To remove the Kubernetes resources:
 
 ```bash
+kubectl delete -f student-pod-reader-pod.yaml --ignore-not-found
+kubectl delete -f student-pod-reader-rolebinding.yaml --ignore-not-found
+kubectl delete -f student-pod-reader-role.yaml --ignore-not-found
+kubectl delete -f student-pod-reader-serviceaccount.yaml --ignore-not-found
 kubectl delete -f student-space-test-pod.yaml --ignore-not-found
 kubectl delete -f user-rolebinding.yaml --ignore-not-found
 kubectl delete -f user-role.yaml --ignore-not-found

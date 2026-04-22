@@ -1,13 +1,6 @@
 nameOverride: simple-nginx
 
-replicaCount: 1
-
-image:
-  repository: nginx
-  tag: "1.25"
-
-service:
-  port: 80
+replicaCount: 2
 
 ingress:
   enabled: true

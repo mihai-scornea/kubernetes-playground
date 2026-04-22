@@ -14,6 +14,7 @@
 - [Writing different files into each pod volume](#writing-different-files-into-each-pod-volume)
 - [Draining a node and watching the pod move](#draining-a-node-and-watching-the-pod-move)
 - [Verifying the data is still there](#verifying-the-data-is-still-there)
+- [Query the statefulset pods individually through the headless service](#query-the-statefulset-pods-individually-through-the-headless-service)
 - [Cleaning up](#cleaning-up)
 
 ---
@@ -178,16 +179,16 @@ That is the `k8s-master` machine and the NFS export we created earlier.
 
 ## Creating the StatefulSet
 
-First create the headless service:
-
-```bash
-kubectl apply -f statefulset-headless-service.yaml
-```
-
-Then create the StatefulSet:
+First create the headless service:create the StatefulSet:
 
 ```bash
 kubectl apply -f demo-statefulset.yaml
+```
+
+Then create the headless service:
+
+```bash
+kubectl apply -f statefulset-headless-service.yaml
 ```
 
 Check what was created:
@@ -320,6 +321,15 @@ This is why StatefulSets are so useful for stateful workloads.
 
 ---
 
+## Query the statefulset pods individually through the headless service:
+
+You need to use the name of the pod, followed by the fully qualified domain name of the headless service.
+
+```bash
+kubectl exec -it tester-static-pod-k8s-master -- curl nfs-stateful-demo-0.nfs-stateful-demo.default.svc.cluster.local
+kubectl exec -it tester-static-pod-k8s-master -- curl nfs-stateful-demo-0.nfs-stateful-demo.default.svc.cluster.local
+```
+
 ## Cleaning up
 
 To remove the StatefulSet resources:
@@ -328,6 +338,13 @@ To remove the StatefulSet resources:
 kubectl delete -f demo-statefulset.yaml
 kubectl delete -f statefulset-headless-service.yaml
 kubectl delete -f nfs-storageclass.yaml
+```
+
+To delete the PVCs:
+
+```bash
+kubectl delete pvc data-nfs-stateful-demo-0
+kubectl delete pvc data-nfs-stateful-demo-1
 ```
 
 To remove the CSI driver:

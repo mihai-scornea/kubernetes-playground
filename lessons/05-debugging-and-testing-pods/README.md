@@ -12,15 +12,17 @@
 - [Inspecting the pods](#inspecting-the-pods)
 - [Using kubectl exec](#using-kubectl-exec)
 - [Testing pod to pod communication](#testing-pod-to-pod-communication)
+- [Restricting access with a NetworkPolicy](#restricting-access-with-a-networkpolicy)
 - [Using kubectl port-forward](#using-kubectl-port-forward)
 - [Using an SSH tunnel from Windows](#using-an-ssh-tunnel-from-windows)
+- [Lesson summary](#lesson-summary)
 - [Cleaning up](#cleaning-up)
 
 ---
 
 ## Debugging and testing pods
 
-In this lesson, we will create 2 pods that help us practice basic debugging and testing workflows.
+In this lesson, we will create 3 pods that help us practice basic debugging and testing workflows.
 
 The first pod will run the official nginx image:
 
@@ -32,6 +34,14 @@ The second pod will be a toolbox pod called `tester-pod`.
 
 It will stay running and give us useful commands such as `bash` and `curl` so that we can test connectivity from inside the cluster.
 
+The third pod will be almost identical to the `tester-pod`, but we will create it as a static pod to illustrate this functionality.
+
+We will also add a `NetworkPolicy` so that this lesson shows an important real-world troubleshooting scenario.
+
+If one pod cannot access another, the problem is not always the application itself.
+
+Sometimes traffic is being blocked by Kubernetes networking rules, so checking `NetworkPolicy` objects should be part of the debugging process.
+
 ---
 
 ## What we will create
@@ -41,6 +51,7 @@ We will use these files:
 - `nginx-debug-pod.yaml`
 - `tester-pod.yaml`
 - `tester-static-pod.yaml`
+- `network-policy.yaml`
 
 ---
 
@@ -253,6 +264,61 @@ exit
 
 ---
 
+## Restricting access with a NetworkPolicy
+
+In real clusters, pod to pod communication is not always fully open.
+
+One common reason a pod cannot reach another pod is a `NetworkPolicy`.
+
+In this lesson, we add:
+
+```bash
+kubectl apply -f network-policy.yaml
+```
+
+This policy selects the `nginx-debug` pod and allows ingress traffic only from pods with this label:
+
+```text
+app: tester
+```
+
+That means:
+
+- The static pod `tester-static-pod` is allowed, because its manifest includes the label `app: tester`
+- The regular `tester-pod` is not allowed, because its manifest does not include that label
+
+If you now test again from the regular tester pod:
+
+```bash
+kubectl exec -it tester-pod -- bash
+curl <nginx-debug-pod-ip>
+```
+
+the request should fail.
+
+But if you test from the static tester pod:
+
+```bash
+kubectl exec -it tester-static-pod-k8s-master -- bash
+curl <nginx-debug-pod-ip>
+```
+
+the request should succeed.
+
+This is a useful troubleshooting lesson.
+
+If one pod cannot access another pod, do not assume the application is broken right away.
+
+Also check:
+
+- Existing `NetworkPolicy` objects
+- Which pod labels the policy matches
+- Whether ingress, egress, or both are being restricted
+
+This is exactly the kind of issue you may run into in real environments.
+
+---
+
 ## Using kubectl port-forward
 
 Sometimes we want to access a pod locally from the machine where we are running `kubectl`.
@@ -321,16 +387,35 @@ This is a very convenient way to view pod output on Windows even though the Kube
 
 ---
 
+## Lesson summary
+
+In this lesson, we practiced several common pod debugging techniques:
+
+- Creating and inspecting normal pods
+- Creating a static pod through the kubelet
+- Using `kubectl describe`, `kubectl get -o yaml`, and `kubectl exec`
+- Testing pod to pod communication with `curl`
+- Using `kubectl port-forward` for local access
+- Using an SSH tunnel from Windows to reach a forwarded pod port
+- Checking `NetworkPolicy` objects when one pod cannot reach another
+
+The main troubleshooting idea to remember is that connectivity problems are not always caused by the containerized application itself.
+
+Sometimes Kubernetes networking rules are the real reason traffic is blocked.
+
+---
+
 ## Cleaning up
 
-At the end of this lesson, we will delete the nginx debug pod but keep the testing pod.
+At the end of this lesson, we will clean up the temporary lesson resources but keep both tester pods.
 
 You can also ctrl+c the kubectl port-forward process.
 
-Delete only the nginx pod:
+Delete the nginx pod and the NetworkPolicy:
 
 ```bash
 kubectl delete -f nginx-debug-pod.yaml
+kubectl delete -f network-policy.yaml
 ```
 
 Confirm what remains:
@@ -342,12 +427,9 @@ kubectl get pods
 You should still have:
 
 - `tester-pod`
+- `tester-static-pod-k8s-master`
 
-We keep it because it will continue to be useful for testing in later examples.
-
-We should also still have the static `tester-static-pod-k8s-master` pod.
-
-We will also keep that one.
+We keep both because they will continue to be useful for testing in later examples.
 
 ---
 
