@@ -6,11 +6,15 @@ This project's purpose is to help you install your very own Kubernetes cluster.
 
 It is designed to give you the easiest possible way to spin up a real Kubernetes cluster (not Minikube or something that installs in one command and gives no explanations).
 
-This project is paired with my Udemy course (currently a work in progress).
+This project is paired with my Udemy course where I fully explain everything with easy to follow diagrams and animations.
+
+Here is the link to my course: [Kubernetes for Beginners: Explained in a Human Way](https://www.udemy.com/course/kubernetes-explained-in-a-human-way/?referralCode=A33A6B905F5CF59B8FAC&couponCode=2021PM20)
 
 Together with the course, this project will teach you Kubernetes in a very in-depth and easy-to-follow way.
 
 By the end, you will understand what everything does intuitively, not just "install this, do that" :)
+
+I hope to see you in the course!
 
 ---
 
